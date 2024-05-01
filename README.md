@@ -19,6 +19,7 @@ Chat-Spring is a simple chat room application built using Spring Boot WebSocket 
 
 - Java Development Kit (JDK) 17 + installed on your machine
 - Maven for building the project
+- Docker
 
 ### Installation
 
@@ -34,19 +35,13 @@ Chat-Spring is a simple chat room application built using Spring Boot WebSocket 
    cd Chat-Spring
    ```
 
-3. Build the project using Maven:
+3. Compose docker
 
    ```bash
-   mvn clean package
+   docker compose up -d
    ```
 
-4. Run the application:
-
-   ```bash
-   mvn clean compile spring-boot:run
-   ```
-
-5. Access the application at `http://localhost:8080`.
+4. Access the application at `http://localhost:6868`.
 
 ## Usage
 

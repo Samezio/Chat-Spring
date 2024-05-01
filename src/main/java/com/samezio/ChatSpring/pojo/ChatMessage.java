@@ -1,4 +1,4 @@
-package com.samezio.ChatSpring.controller;
+package com.samezio.ChatSpring.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

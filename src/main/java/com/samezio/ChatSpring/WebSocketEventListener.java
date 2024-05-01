@@ -6,8 +6,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.samezio.ChatSpring.controller.ChatMessage;
-import com.samezio.ChatSpring.controller.MessageType;
+import com.samezio.ChatSpring.pojo.ChatMessage;
+import com.samezio.ChatSpring.pojo.MessageType;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

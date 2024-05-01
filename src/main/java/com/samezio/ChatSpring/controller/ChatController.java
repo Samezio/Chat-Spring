@@ -6,6 +6,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
+import com.samezio.ChatSpring.pojo.ChatMessage;
+
 @Controller
 public class ChatController {
 

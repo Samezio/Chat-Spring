@@ -1,4 +1,4 @@
-package com.samezio.ChatSpring.controller;
+package com.samezio.ChatSpring.pojo;
 
 public enum MessageType {
 
