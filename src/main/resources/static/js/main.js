@@ -26,7 +26,10 @@ function connect(event) {
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, onConnected, onError);
+        stompClient.connect({
+            login:"test",
+            passcode: "123456"
+        }, onConnected, onError);
     }
     event.preventDefault();
 }
