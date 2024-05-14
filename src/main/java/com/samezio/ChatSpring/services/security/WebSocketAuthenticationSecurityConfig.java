@@ -1,4 +1,4 @@
-package com.samezio.ChatSpring.services.securiy;
+package com.samezio.ChatSpring.services.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

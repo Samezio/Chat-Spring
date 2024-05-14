@@ -1,4 +1,4 @@
-package com.samezio.ChatSpring.services.securiy;
+package com.samezio.ChatSpring.services.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;

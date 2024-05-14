@@ -7,18 +7,18 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
-import com.samezio.ChatSpring.data.services.ChatHistoryService;
 import com.samezio.ChatSpring.pojo.ChatMessage;
+import com.samezio.ChatSpring.services.ChatStorageService;
 
 @Controller
 public class ChatController {
     @Autowired
-    private ChatHistoryService chatHistoryService;
+    private ChatStorageService chatHistoryService;
 
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage message) {
-        chatHistoryService.insertChat(message.getSender(), message.getMessageType(), null);
+        chatHistoryService.store(message);
         return message;
     }
 
@@ -26,7 +26,7 @@ public class ChatController {
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage message, SimpMessageHeaderAccessor accessor) {
         accessor.getSessionAttributes().put("username", message.getSender());
-        chatHistoryService.insertChat(message.getSender(), message.getMessageType(), message.getContent());
+        chatHistoryService.store(message);
         return message;
     }
 }
