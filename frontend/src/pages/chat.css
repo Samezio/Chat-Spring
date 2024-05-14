@@ -1,0 +1,69 @@
+/* Chat container */
+.chat-container {
+    position: relative;
+    /* Ensure relative positioning */
+    height: 400px;
+    /* Set a fixed height */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
+    overflow-x: auto;
+}
+
+/* Chat messages */
+.chat-messages {
+    position: absolute;
+    bottom: 0;
+    /* Align messages at the bottom */
+    width: 100%;
+    display: flex;
+        /* Enable flexbox layout */
+        flex-direction: column;
+        /* Stack messages vertically */
+}
+
+/* Chat messages */
+.message {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    max-width: 70%;
+}
+
+/* Current user message */
+.message.user.CHAT {
+    background-color: #007bff;
+        color: white;
+        align-self: flex-start;
+        /* Align on left */
+}
+
+.message.JOIN , .message.LEAVE {
+    align-self: center;
+    /* Align on left */
+}
+
+/* Other user message */
+.message.other.CHAT {
+background-color: #28a745;
+    color: white;
+    align-self: flex-end;
+    /* Align on right */
+}
+
+/* Input form */
+.chat-input {
+    margin-top: 20px;
+}
+
+/* Form input */
+.chat-input input {
+    width: calc(100% - 80px);
+    /* Adjust input width */
+    margin-right: 10px;
+}
+
+/* Form button */
+.chat-input button {
+    width: 80px;
+    /* Adjust button width */
+}

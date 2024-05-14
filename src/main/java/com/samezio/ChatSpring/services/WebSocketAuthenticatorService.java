@@ -2,6 +2,7 @@ package com.samezio.ChatSpring.services;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,11 +10,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.samezio.ChatSpring.services.security.WebTokenService;
+
 @Service
 public class WebSocketAuthenticatorService {
-
-    private final String testUser = "test";
-    private final String testPwd = "123456";
+    @Autowired
+    private WebTokenService webTokenService;
+    @Autowired
+    private UsersService usersService;
 
     public UsernamePasswordAuthenticationToken getAuthenticatedOrFail(final String username, final String password)
             throws AuthenticationException {
@@ -24,10 +28,10 @@ public class WebSocketAuthenticatorService {
             throw new AuthenticationCredentialsNotFoundException("Password was null or empty.");
         }
 
-        if (!testUser.equalsIgnoreCase(username.trim())) {
+        if (!usersService.isExist(username)) {
             throw new BadCredentialsException("Bad credentials for user " + username);
         }
-        if (!testPwd.equalsIgnoreCase(password)) {
+        if (!password.equalsIgnoreCase(webTokenService.getWebToken(username))) {
             throw new BadCredentialsException("Bad credentials for user " + username);
         }
 

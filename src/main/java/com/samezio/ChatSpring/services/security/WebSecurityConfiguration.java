@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -38,7 +40,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-public class WebSecurityConfig {
+public class WebSecurityConfiguration {
         @Autowired
         private ApplicationContext applicationContext;
 
@@ -53,7 +55,7 @@ public class WebSecurityConfig {
                                 .addFilterAfter(new WebTokenAuthenticationFilter(applicationContext),
                                                 BasicAuthenticationFilter.class)
                                 .authorizeHttpRequests(
-                                                t -> t.requestMatchers("/stomp").permitAll()
+                                                t -> t.requestMatchers("/stomp", "/ws", "/ws/**").permitAll()
                                                                 .requestMatchers("/user/login", "/user/register",
                                                                                 "/user/new/*/valid")
                                                                 .permitAll().anyRequest().authenticated());
@@ -73,6 +75,7 @@ public class WebSecurityConfig {
                 return new WebTokenAuthentication(false);
         }
 
+        @Bean
         public WebTokenService webTokenService() {
                 return new WebTokenService() {
                         private final Map<String, String> tokenMap = new HashMap<>();
@@ -108,10 +111,11 @@ class WebTokenAuthenticationFilter extends OncePerRequestFilter {
 
         @Override
         protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-                return new AndRequestMatcher(new AntPathRequestMatcher("/stomp"),
+                return new OrRequestMatcher(new AntPathRequestMatcher("/ws/**"), 
+                                new AntPathRequestMatcher("/stomp"),
                                 new AntPathRequestMatcher("/user/login"),
                                 new AntPathRequestMatcher("/user/register"),
-                                new AntPathRequestMatcher("/user/new/*/valid")).matches(request);
+                                new AntPathRequestMatcher("/user/new/*/valid"), new AntPathRequestMatcher("/*", HttpMethod.OPTIONS.name())).matches(request);
         }
 
         @Override
@@ -121,7 +125,7 @@ class WebTokenAuthenticationFilter extends OncePerRequestFilter {
                                 .map(header -> header.split(" "))
                                 .filter(tokenSplit -> tokenSplit.length == 2)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                                "Authorization header missing or invalid"));
+                                                "Authorization header missing or invalid: " + request.getRequestURI()));
                 final String username = tokenHeader[0];
                 final String token = tokenHeader[1];
                 WebTokenAuthentication webTokenAuthentication = applicationContext

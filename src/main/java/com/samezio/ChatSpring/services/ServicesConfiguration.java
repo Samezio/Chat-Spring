@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 public class ServicesConfiguration {
 
-    @Autowired
     @Bean
     public UsersService fileBasedUsersService(@Value("${user-file}") Path usersFile) throws IOException {
         if(!Files.isRegularFile(usersFile)) {
@@ -78,9 +77,10 @@ public class ServicesConfiguration {
         }
     }
     
+    @Bean
     public ChatStorageService fileBasedChatStorageService(@Value("${chat-file}") Path chatsFile) throws IOException {
         if(!Files.isRegularFile(chatsFile)) {
-            Files.createDirectories(chatsFile);
+            Files.createDirectories(chatsFile.getParent());
             Files.createFile(chatsFile);
         }
         @Data

@@ -4,19 +4,28 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.samezio.ChatSpring.services.UsersService;
+import com.samezio.ChatSpring.services.security.WebTokenService;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    @Autowired
     private UsersService userRepository;
+    @Autowired
+    private WebTokenService webTokenService;
 
     @PostMapping("/register")
     public void register(@RequestBody UserRegisterJSON userRegisterJSON) {
@@ -32,8 +41,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public boolean login(@PathVariable(required = true) LoginJSON loginJson) {
-        return userRepository.matchCredentials(loginJson.getUsername(), loginJson.getPassword());
+    public String login(@RequestBody(required = true) LoginJSON loginJson) {
+        log.info("Login {}", loginJson);
+        if(userRepository.matchCredentials(loginJson.getUsername(), loginJson.getPassword())) {
+            return webTokenService.generateNewToken(loginJson.getUsername());
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
 
     @Data
